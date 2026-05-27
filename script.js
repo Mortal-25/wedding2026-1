@@ -2,7 +2,6 @@
 // STATE MANAGEMENT
 // ========================================
 const pages = document.querySelectorAll('.page');
-const dots = document.querySelectorAll('.dot');
 
 let currentPage = 0;
 let isAnimating = false;
@@ -21,7 +20,7 @@ function render() {
 
     updateDots();
 
-    // Сбрасываем скролл окна в самый верх при каждом перелистывании
+    // Мгновенно сбрасываем вертикальный скролл на самый верх новой страницы
     window.scrollTo({
         top: 0,
         behavior: 'instant'
@@ -32,7 +31,6 @@ function render() {
 // DOTS INDICATION SYSTEM
 // ========================================
 function updateDots() {
-    // Находим точки именно внутри активной страницы, чтобы подсветить нужную
     pages.forEach((page, pageIndex) => {
         const pageDots = page.querySelectorAll('.dot');
         pageDots.forEach((dot, dotIndex) => {
@@ -58,7 +56,7 @@ function setPage(index) {
 
     setTimeout(() => {
         isAnimating = false;
-    }, 600); // Соответствует длительности анимации в CSS
+    }, 400); // Соответствует transition в CSS
 }
 
 function goNextPage() {
@@ -70,7 +68,7 @@ function goPrevPage() {
 }
 
 // ========================================
-// SWIPE SYSTEM (FIXED AND SAFE)
+// SWIPE SYSTEM (SAFE & CONDITIONAL)
 // ========================================
 let startX = 0;
 let startY = 0;
@@ -87,9 +85,8 @@ document.addEventListener('touchend', (e) => {
     const diffX = startX - endX;
     const diffY = startY - endY;
 
-    // Если вертикальный скролл больше горизонтального свайпа — игнорируем, давая пользователю скроллить контент
+    // Если пользователь скроллил страницу вверх или вниз, отменяем горизонтальный свайп
     if (Math.abs(diffY) > Math.abs(diffX)) return;
-    // Чувствительность свайпа
     if (Math.abs(diffX) < 60) return;
 
     if (diffX > 0) goNextPage();
@@ -113,7 +110,7 @@ document.querySelectorAll('.back-btn').forEach(btn => {
     });
 });
 
-// Клик по полушариям экрана для десктопов (исключая формы и кнопки)
+// Клик по боковым областям экрана на десктопах (исключая формы, карты и кнопки)
 pages.forEach(page => {
     page.addEventListener('click', (e) => {
         const tag = e.target.tagName;
@@ -128,7 +125,7 @@ pages.forEach(page => {
     });
 });
 
-// Клавиатура
+// Навигация стрелками клавиатуры
 document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowRight') goNextPage();
     if (e.key === 'ArrowLeft') goPrevPage();
