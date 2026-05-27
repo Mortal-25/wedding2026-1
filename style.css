@@ -48,36 +48,32 @@ linear-gradient(
    PAGE
 ========================================= */
 
-.page{
-position:absolute;
-width:100%;
-height:100dvh;
+.page {
+    position: absolute;
+    width: 100%;
+    height: 100dvh;
 
-padding-top: 80px;
-padding-left: 24px;
-padding-right: 24px;
-padding-bottom: 140px;
+    padding: 80px 24px 180px;
 
-display:flex;
-flex-direction:column;
-justify-content:flex-start;
-align-items:center;
-text-align:center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    text-align: center;
 
-background:
-linear-gradient(
-180deg,
-rgba(255,255,255,0.96),
-rgba(250,246,240,0.96)
-);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 
-opacity:0;
-transform:translateX(100%);
-transition:
-transform .8s cubic-bezier(.77,0,.18,1),
-opacity .8s ease;
+    background: linear-gradient(
+        180deg,
+        rgba(255,255,255,0.96),
+        rgba(250,246,240,0.96)
+    );
 
-overflow:hidden;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: transform .8s cubic-bezier(.77,0,.18,1),
+                opacity .8s ease;
 }
 
 .page.active{
@@ -210,15 +206,15 @@ box-shadow:
    NAVIGATION
 ========================================= */
 
-.nav-buttons{
-position:absolute;
-bottom:40px;
-left:0;
-width:100%;
-display:flex;
-justify-content:space-between;
-padding:0 28px;
-z-index:50;
+.nav-buttons {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 28px;
+    z-index: 1000;
 }
 
 .nav-btn{
