@@ -1,14 +1,8 @@
-// ========================================
-// STATE MANAGEMENT
-// ========================================
 const pages = document.querySelectorAll('.page');
-
+const dots = document.querySelectorAll('.dot');
 let currentPage = 0;
 let isAnimating = false;
 
-// ========================================
-// RENDER SYSTEM (FIXED SCROLL RESET)
-// ========================================
 function render() {
     pages.forEach((page, index) => {
         if (index === currentPage) {
@@ -18,34 +12,20 @@ function render() {
         }
     });
 
-    updateDots();
-
-    // Мгновенно сбрасываем вертикальный скролл на самый верх новой страницы
-    window.scrollTo({
-        top: 0,
-        behavior: 'instant'
+    // Обновляем точки навигации
+    dots.forEach((dot, index) => {
+        if (index === currentPage) {
+            dot.classList.add('active-dot');
+        } else {
+            dot.classList.remove('active-dot');
+        }
     });
+
+    // Сбрасываем внутренний скролл страницы наверх при перелистывании
+    const activePage = document.querySelector('.page.active');
+    if (activePage) activePage.scrollTop = 0;
 }
 
-// ========================================
-// DOTS INDICATION SYSTEM
-// ========================================
-function updateDots() {
-    pages.forEach((page, pageIndex) => {
-        const pageDots = page.querySelectorAll('.dot');
-        pageDots.forEach((dot, dotIndex) => {
-            if (dotIndex === pageIndex) {
-                dot.classList.add('active-dot');
-            } else {
-                dot.classList.remove('active-dot');
-            }
-        });
-    });
-}
-
-// ========================================
-// NAVIGATION CORE
-// ========================================
 function setPage(index) {
     if (index < 0 || index >= pages.length) return;
     if (isAnimating) return;
@@ -56,20 +36,17 @@ function setPage(index) {
 
     setTimeout(() => {
         isAnimating = false;
-    }, 400); // Соответствует transition в CSS
+    }, 400);
 }
 
-function goNextPage() {
-    setPage(currentPage + 1);
-}
+function goNextPage() { setPage(currentPage + 1); }
+function goPrevPage() { setPage(currentPage - 1); }
 
-function goPrevPage() {
-    setPage(currentPage - 1);
-}
+// КЛИКИ ПО СТРЕЛОЧКАМ
+document.querySelector('.next-btn')?.addEventListener('click', (e) => { e.stopPropagation(); goNextPage(); });
+document.querySelector('.back-btn')?.addEventListener('click', (e) => { e.stopPropagation(); goPrevPage(); });
 
-// ========================================
-// SWIPE SYSTEM (SAFE & CONDITIONAL)
-// ========================================
+// СВАЙПЫ ДЛЯ СМАРТФОНОВ
 let startX = 0;
 let startY = 0;
 
@@ -85,37 +62,26 @@ document.addEventListener('touchend', (e) => {
     const diffX = startX - endX;
     const diffY = startY - endY;
 
-    // Если пользователь скроллил страницу вверх или вниз, отменяем горизонтальный свайп
+    // Если движение было больше по вертикали (скролл внутри страницы), игнорируем свайп книги
     if (Math.abs(diffY) > Math.abs(diffX)) return;
-    if (Math.abs(diffX) < 60) return;
+    if (Math.abs(diffX) < 50) return; // Минимальное расстояние для свайпа
 
     if (diffX > 0) goNextPage();
     else goPrevPage();
 }, { passive: true });
 
-// ========================================
-// CLICK EVENTS
-// ========================================
-document.querySelectorAll('.next-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        goNextPage();
-    });
+// НАВИГАЦИЯ КЛАВИАТУРОЙ С ПК
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') goNextPage();
+    if (e.key === 'ArrowLeft') goPrevPage();
 });
 
-document.querySelectorAll('.back-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        goPrevPage();
-    });
-});
-
-// Клик по боковым областям экрана на десктопах (исключая формы, карты и кнопки)
+// КЛИКИ ПО БОКОВЫМ ОБЛАСТЯМ ЭКРАНА (Исключая интерактивные элементы)
 pages.forEach(page => {
     page.addEventListener('click', (e) => {
         const tag = e.target.tagName;
-        if (['BUTTON', 'INPUT', 'SELECT', 'OPTION', 'TEXTAREA', 'A', 'IFRAME', 'path', 'svg'].includes(tag)) return;
-        if (e.target.closest('form') || e.target.closest('.nav-buttons') || e.target.closest('.map')) return;
+        if (['BUTTON', 'INPUT', 'SELECT', 'OPTION', 'A', 'IFRAME'].includes(tag)) return;
+        if (e.target.closest('form') || e.target.closest('.nav-buttons')) return;
 
         if (e.clientX > window.innerWidth / 2) {
             goNextPage();
@@ -125,15 +91,7 @@ pages.forEach(page => {
     });
 });
 
-// Навигация стрелками клавиатуры
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowRight') goNextPage();
-    if (e.key === 'ArrowLeft') goPrevPage();
-});
-
-// ========================================
-// COUNTDOWN SYSTEM
-// ========================================
+// ТАЙМЕР ОБРАТНОГО ОТСЧЕТА
 const targetDate = new Date("August 1, 2026 14:00:00").getTime();
 
 function updateCountdown() {
@@ -160,36 +118,27 @@ function updateCountdown() {
     set('hours', hours);
     set('minutes', minutes);
 }
-
 setInterval(updateCountdown, 1000);
 updateCountdown();
 
-// ========================================
-// GET GUEST NAME FROM URL
-// ========================================
+// ИМЯ ИЗ ССЫЛКИ
 const params = new URLSearchParams(window.location.search);
 const guestName = params.get('name');
-
 if (guestName) {
     const formatted = guestName.replace(/\+/g, ' ');
     const title = document.querySelector('.guest-name');
     if (title) title.innerText = formatted;
-
     const input = document.querySelector('input[name="name"]');
     if (input) input.value = formatted;
 }
 
-// ========================================
-// RSVP FORM HANDLING
-// ========================================
+// ОТПРАВКА RSVP
 const form = document.getElementById('rsvp-form');
-
 if (form) {
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         const btn = form.querySelector('button');
         const oldText = btn.innerText;
-
         btn.innerText = "Надсилання...";
         btn.disabled = true;
 
@@ -199,14 +148,11 @@ if (form) {
                 body: new FormData(form),
                 headers: { 'Accept': 'application/json' }
             });
-
             if (res.ok) {
                 form.style.display = "none";
                 const msg = document.getElementById('success-message');
                 if (msg) msg.style.display = "block";
-            } else {
-                throw new Error();
-            }
+            } else { throw new Error(); }
         } catch (err) {
             alert("Помилка надсилання форми");
             btn.innerText = oldText;
@@ -215,16 +161,5 @@ if (form) {
     });
 }
 
-// ========================================
-// INITIALIZE & ILLUSTRATIONS
-// ========================================
+// Запуск стартового состояния
 render();
-
-if (window.Illustrations) {
-    document.querySelectorAll('.heart').forEach(el => {
-        el.innerHTML = Illustrations.heart;
-    });
-    document.querySelectorAll('.mini-divider').forEach(el => {
-        el.innerHTML = Illustrations.divider;
-    });
-}
