@@ -1,602 +1,296 @@
 // ========================================
-// PAGES
+// STATE
 // ========================================
 
 const pages = document.querySelectorAll('.page');
+const dots = document.querySelectorAll('.dot');
 
 let currentPage = 0;
+let isAnimating = false;
 
 // ========================================
-// SHOW PAGE
+// RENDER SYSTEM
 // ========================================
 
-function showPage(index){
+function render(direction = 'next') {
 
-pages.forEach((page)=>{
-page.classList.remove('active');
-});
+    pages.forEach(p => p.classList.remove('active'));
+    pages[currentPage].classList.add('active');
 
-pages[index].classList.add('active');
+    updateDots();
 
-updateDots();
-
+    animatePageTurn(direction);
 }
 
 // ========================================
 // DOTS
 // ========================================
 
-function updateDots(){
+function updateDots() {
 
-pages.forEach((page, pageIndex)=>{
+    dots.forEach(d => d.classList.remove('active-dot'));
 
-const dots = page.querySelectorAll('.dot');
-
-dots.forEach((dot)=>{
-dot.classList.remove('active-dot');
-});
-
-if(dots[pageIndex]){
-dots[pageIndex].classList.add('active-dot');
-}
-
-});
-
+    if (dots[currentPage]) {
+        dots[currentPage].classList.add('active-dot');
+    }
 }
 
 // ========================================
-// PREMIUM SWIPE LOGIC
+// NAVIGATION CORE
 // ========================================
 
-let touchStartX = 0;
-let touchEndX = 0;
+function setPage(index, direction = 'next') {
 
-let touchStartY = 0;
-let touchEndY = 0;
+    if (index < 0 || index >= pages.length) return;
 
-let isSwiping = false;
+    if (isAnimating) return;
+    isAnimating = true;
 
-// START TOUCH
+    currentPage = index;
+    render(direction);
 
-document.addEventListener(
-'touchstart',
-(e)=>{
-
-touchStartX =
-e.changedTouches[0].screenX;
-
-touchStartY =
-e.changedTouches[0].screenY;
-
-isSwiping = true;
-
-},
-{ passive:true }
-);
-
-// END TOUCH
-
-document.addEventListener(
-'touchend',
-(e)=>{
-
-if(!isSwiping) return;
-
-touchEndX =
-e.changedTouches[0].screenX;
-
-touchEndY =
-e.changedTouches[0].screenY;
-
-handleGesture();
-
-isSwiping = false;
-
-},
-{ passive:true }
-);
-
-// HANDLE SWIPE
-
-function handleGesture(){
-
-const diffX =
-touchStartX - touchEndX;
-
-const diffY =
-touchStartY - touchEndY;
-
-// IGNORE VERTICAL SCROLL
-
-if(
-Math.abs(diffY)
->
-Math.abs(diffX)
-){
-
-return;
-
+    setTimeout(() => {
+        isAnimating = false;
+    }, 800);
 }
 
-// SWIPE LEFT → NEXT PAGE
-
-if(diffX > 60){
-
-goNextPage();
-
+function goNextPage() {
+    setPage(currentPage + 1, 'next');
 }
 
-// SWIPE RIGHT → PREVIOUS PAGE
-
-if(diffX < -60){
-
-goPrevPage();
-
-}
-
+function goPrevPage() {
+    setPage(currentPage - 1, 'prev');
 }
 
 // ========================================
-// PAGE FUNCTIONS
+// PAGE ANIMATION
 // ========================================
 
-function goNextPage(){
+function animatePageTurn(direction) {
 
-if(currentPage < pages.length - 1){
+    const page = pages[currentPage];
 
-pages[currentPage]
-.classList.remove('active');
+    if (!page) return;
 
-currentPage++;
+    const fromX = direction === 'next' ? 80 : -80;
 
-pages[currentPage]
-.classList.add('active');
-
-updateDots();
-
-animatePageTurn('next');
-
-}
-
-}
-
-function goPrevPage(){
-
-if(currentPage > 0){
-
-pages[currentPage]
-.classList.remove('active');
-
-currentPage--;
-
-pages[currentPage]
-.classList.add('active');
-
-updateDots();
-
-animatePageTurn('prev');
-
-}
-
+    page.animate([
+        {
+            transform: `translateX(${fromX}px) scale(.97)`,
+            opacity: 0.6
+        },
+        {
+            transform: 'translateX(0px) scale(1)',
+            opacity: 1
+        }
+    ], {
+        duration: 700,
+        easing: 'cubic-bezier(.77,0,.18,1)'
+    });
 }
 
 // ========================================
-// PAGE TURN EFFECT
+// SWIPE (FIXED)
 // ========================================
 
-function animatePageTurn(direction){
+let startX = 0;
+let startY = 0;
 
-const current =
-pages[currentPage];
+document.addEventListener('touchstart', (e) => {
 
-if(direction === 'next'){
+    startX = e.changedTouches[0].screenX;
+    startY = e.changedTouches[0].screenY;
 
-current.animate(
+}, { passive: true });
 
-[
-{
-transform:
-'translateX(100px) scale(.96)',
-opacity:.5
-},
+document.addEventListener('touchend', (e) => {
 
-{
-transform:
-'translateX(0px) scale(1)',
-opacity:1
-}
-],
+    const endX = e.changedTouches[0].screenX;
+    const endY = e.changedTouches[0].screenY;
 
-{
-duration:700,
-easing:'cubic-bezier(.77,0,.18,1)'
-}
+    const diffX = startX - endX;
+    const diffY = startY - endY;
 
-);
+    if (Math.abs(diffY) > Math.abs(diffX)) return;
 
-}else{
+    if (Math.abs(diffX) < 60) return;
 
-current.animate(
+    if (diffX > 0) goNextPage();
+    else goPrevPage();
 
-[
-{
-transform:
-'translateX(-100px) scale(.96)',
-opacity:.5
-},
-
-{
-transform:
-'translateX(0px) scale(1)',
-opacity:1
-}
-],
-
-{
-duration:700,
-easing:'cubic-bezier(.77,0,.18,1)'
-}
-
-);
-
-}
-
-}
+}, { passive: true });
 
 // ========================================
 // CLICK NAVIGATION
 // ========================================
 
-pages.forEach((page)=>{
+pages.forEach(page => {
 
-page.addEventListener(
-'click',
-(e)=>{
+    page.addEventListener('click', (e) => {
 
-const tag =
-e.target.tagName;
+        const tag = e.target.tagName;
 
-// IGNORE BUTTONS / FORM
+        if (
+            ['BUTTON', 'INPUT', 'SELECT', 'OPTION', 'TEXTAREA', 'A', 'IFRAME'].includes(tag)
+        ) return;
 
-if(
-tag === 'BUTTON' ||
-tag === 'INPUT' ||
-tag === 'SELECT' ||
-tag === 'OPTION' ||
-tag === 'TEXTAREA' ||
-tag === 'A' ||
-tag === 'IFRAME'
-){
+        if (e.clientX > window.innerWidth / 2) {
+            goNextPage();
+        } else {
+            goPrevPage();
+        }
 
-return;
-
-}
-
-// RIGHT SIDE → NEXT
-
-if(
-e.clientX >
-window.innerWidth / 2
-){
-
-goNextPage();
-
-}else{
-
-// LEFT SIDE → PREV
-
-goPrevPage();
-
-}
-
-}
-);
+    });
 
 });
 
 // ========================================
-// BUTTON NAVIGATION
+// BUTTONS
 // ========================================
 
-document
-.querySelectorAll('.next-btn')
-.forEach((btn)=>{
-
-btn.addEventListener(
-'click',
-(e)=>{
-
-e.stopPropagation();
-
-goNextPage();
-
-}
-);
-
+document.querySelectorAll('.next-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        goNextPage();
+    });
 });
 
-document
-.querySelectorAll('.back-btn')
-.forEach((btn)=>{
+document.querySelectorAll('.back-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        goPrevPage();
+    });
+});
 
-btn.addEventListener(
-'click',
-(e)=>{
+// ========================================
+// KEYBOARD
+// ========================================
 
-e.stopPropagation();
+document.addEventListener('keydown', (e) => {
 
-goPrevPage();
-
-}
-);
+    if (e.key === 'ArrowRight') goNextPage();
+    if (e.key === 'ArrowLeft') goPrevPage();
 
 });
 
 // ========================================
-// KEYBOARD SUPPORT
+// COUNTDOWN (FIXED)
 // ========================================
 
-document.addEventListener('keydown',(e)=>{
+const targetDate = new Date("August 1, 2026 14:00:00").getTime();
 
-// RIGHT
+function updateCountdown() {
 
-if(e.key === 'ArrowRight'){
+    const now = Date.now();
+    const distance = targetDate - now;
 
-if(currentPage < pages.length - 1){
+    if (distance <= 0) {
+        document.getElementById('days').innerText = "00";
+        document.getElementById('hours').innerText = "00";
+        document.getElementById('minutes').innerText = "00";
+        return;
+    }
 
-currentPage++;
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((distance / (1000 * 60)) % 60);
 
-showPage(currentPage);
+    const set = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.innerText = value < 10 ? "0" + value : value;
+    };
 
+    set('days', days);
+    set('hours', hours);
+    set('minutes', minutes);
 }
-
-}
-
-// LEFT
-
-if(e.key === 'ArrowLeft'){
-
-if(currentPage > 0){
-
-currentPage--;
-
-showPage(currentPage);
-
-}
-
-}
-
-});
-
-// ========================================
-// COUNTDOWN
-// ========================================
-
-const targetDate = new Date(
-"August 1, 2026 14:00:00"
-).getTime();
-
-function updateCountdown(){
-
-const now = new Date().getTime();
-
-const distance = targetDate - now;
-
-// TIME
-
-const days = Math.floor(
-distance / (1000 * 60 * 60 * 24)
-);
-
-const hours = Math.floor(
-(distance % (1000 * 60 * 60 * 24))
-/
-(1000 * 60 * 60)
-);
-
-const minutes = Math.floor(
-(distance % (1000 * 60 * 60))
-/
-(1000 * 60)
-);
-
-// ELEMENTS
-
-const daysElement = document.getElementById('days');
-
-const hoursElement = document.getElementById('hours');
-
-const minutesElement = document.getElementById('minutes');
-
-// INSERT
-
-if(daysElement){
-
-daysElement.innerText =
-days < 10 ? "0" + days : days;
-
-}
-
-if(hoursElement){
-
-hoursElement.innerText =
-hours < 10 ? "0" + hours : hours;
-
-}
-
-if(minutesElement){
-
-minutesElement.innerText =
-minutes < 10 ? "0" + minutes : minutes;
-
-}
-
-// EXPIRED
-
-if(distance < 0){
-
-clearInterval(countdownInterval);
-
-if(daysElement){
-daysElement.innerText = "00";
-}
-
-if(hoursElement){
-hoursElement.innerText = "00";
-}
-
-if(minutesElement){
-minutesElement.innerText = "00";
-}
-
-}
-
-}
-
-// START TIMER
 
 updateCountdown();
-
-const countdownInterval =
-setInterval(updateCountdown,1000);
+setInterval(updateCountdown, 1000);
 
 // ========================================
-// GUEST NAME FROM URL
-// example:
-// ?name=Марія
+// URL NAME
 // ========================================
 
 const params = new URLSearchParams(window.location.search);
-
 const guestName = params.get('name');
 
-const guestTitle =
-document.querySelector('.guest-name');
+if (guestName) {
 
-const guestInput =
-document.querySelector('input[name="name"]');
+    const formatted = guestName.replace(/\+/g, ' ');
 
-if(guestName){
+    const title = document.querySelector('.guest-name');
+    if (title) title.innerText = formatted;
 
-const formattedName =
-guestName.replace(/\+/g,' ');
-
-if(guestTitle){
-guestTitle.innerText = formattedName;
-}
-
-if(guestInput){
-guestInput.value = formattedName;
-}
-
+    const input = document.querySelector('input[name="name"]');
+    if (input) input.value = formatted;
 }
 
 // ========================================
-// RSVP FORM
+// FORM (FIXED SAFE VERSION)
 // ========================================
 
-const form =
-document.getElementById('rsvp-form');
+const form = document.getElementById('rsvp-form');
 
-if(form){
+if (form) {
 
-form.addEventListener('submit',async(e)=>{
+    form.addEventListener('submit', async (e) => {
 
-e.preventDefault();
+        e.preventDefault();
 
-// BUTTON
+        const btn = form.querySelector('button');
+        const old = btn.innerText;
 
-const submitButton =
-form.querySelector('button');
+        btn.innerText = "Надсилання...";
+        btn.disabled = true;
 
-const originalText =
-submitButton.innerText;
+        try {
 
-submitButton.innerText =
-'Надсилання...';
+            const res = await fetch(form.action, {
+                method: 'POST',
+                body: new FormData(form),
+                headers: { 'Accept': 'application/json' }
+            });
 
-submitButton.disabled = true;
+            if (res.ok) {
 
-try{
+                form.style.display = "none";
 
-const response = await fetch(
-form.action,
-{
-method:'POST',
-body:new FormData(form),
-headers:{
-'Accept':'application/json'
-}
-}
-);
+                const msg = document.getElementById('success-message');
+                if (msg) msg.style.display = "block";
 
-// SUCCESS
+            } else {
+                throw new Error();
+            }
 
-if(response.ok){
+        } catch (err) {
 
-form.innerHTML = `
+            alert("Помилка надсилання форми");
 
-<div style="
-padding:40px 20px;
-text-align:center;
-">
-
-<h2 style="
-margin-bottom:20px;
-">
-Дякуємо ♥
-</h2>
-
-<p class="text">
-Вашу відповідь успішно надіслано.
-</p>
-
-</div>
-
-`;
-
-}else{
-
-alert(
-'Помилка надсилання форми'
-);
-
-submitButton.innerText =
-originalText;
-
-submitButton.disabled = false;
-
-}
-
-}catch(error){
-
-alert(
-'Немає зʼєднання з інтернетом'
-);
-
-submitButton.innerText =
-originalText;
-
-submitButton.disabled = false;
-
-}
-
-});
-
+            btn.innerText = old;
+            btn.disabled = false;
+        }
+    });
 }
 
 // ========================================
-// INITIAL PAGE
+// INITIALIZE
 // ========================================
 
-showPage(currentPage);
+render();
 
-// Replace hearts
-document.querySelectorAll('.heart').forEach(el=>{
-  el.innerHTML = Illustrations.heart;
-});
+// ========================================
+// SAFE ILLUSTRATIONS
+// ========================================
 
-// Replace mini dividers
-document.querySelectorAll('.mini-divider').forEach(el=>{
-  el.innerHTML = Illustrations.divider;
-});
+if (window.Illustrations) {
+
+    document.querySelectorAll('.heart').forEach(el => {
+        el.innerHTML = Illustrations.heart;
+    });
+
+    document.querySelectorAll('.mini-divider').forEach(el => {
+        el.innerHTML = Illustrations.divider;
+    });
+
+}
