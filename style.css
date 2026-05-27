@@ -1,986 +1,519 @@
 /* =========================================
-   RESET
+   RESET & BASE SETUP
 ========================================= */
-
 *{
-margin:0;
-padding:0;
-box-sizing:border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 html,
-body{
-width:100%;
-height:100%;
-overflow:hidden;
-scroll-behavior:smooth;
-}
-
-/* =========================================
-   BODY
-========================================= */
-
-body{
-background:#efe9e2;
-font-family:'Montserrat',sans-serif;
-color:#4d382d;
-overflow:hidden;
-}
-
-/* =========================================
-   MAIN BOOK
-========================================= */
-
-.book{
-width:100%;
-height:100dvh;
-position:relative;
-overflow:hidden;
-background:
-linear-gradient(
-180deg,
-#fdfaf6 0%,
-#f8f3ed 100%
-);
-}
-
-/* =========================================
-   PAGE
-========================================= */
-
-.page {
-    position: absolute;
+body {
     width: 100%;
-    height: 100dvh;
+    min-height: 100%;
+    background: #efe9e2;
+    font-family: 'Montserrat', sans-serif;
+    color: #4d382d;
+    overflow-x: hidden;
+    overflow-y: auto; /* Разрешаем скролл по вертикали */
+    scroll-behavior: smooth;
+}
 
-    padding: 80px 24px 180px;
+/* =========================================
+   MAIN BOOK CONTAINER
+========================================= */
+.book {
+    width: 100%;
+    min-height: 100dvh;
+    position: relative;
+    background: linear-gradient(180deg, #fdfaf6 0%, #f8f3ed 100%);
+}
 
-    display: flex;
+/* =========================================
+   PAGE CONTAINER (FIXED SCROLL & OVERLAP)
+========================================= */
+.page {
+    display: none; /* Скрываем неактивные страницы */
+    width: 100%;
+    min-height: 100dvh; /* Страница занимает минимум экран, но может расти вниз */
+    padding: 60px 24px 140px; /* Отступы сверху и снизу, чтобы контент не прижимался */
+
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
     text-align: center;
-
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
 
     background: linear-gradient(
         180deg,
         rgba(255,255,255,0.96),
         rgba(250,246,240,0.96)
     );
-
+    
+    position: relative;
     opacity: 0;
-    transform: translateX(100%);
-    transition: transform .8s cubic-bezier(.77,0,.18,1),
-                opacity .8s ease;
+    transition: opacity .6s ease;
 }
 
-.page.active{
-opacity:1;
-transform:translateX(0);
-z-index:10;
+/* Активная страница становится видимой */
+.page.active {
+    display: flex;
+    opacity: 1;
+    z-index: 10;
 }
 
 /* =========================================
    TYPOGRAPHY
 ========================================= */
-
-.small-title{
-font-size:12px;
-letter-spacing:5px;
-text-transform:uppercase;
-color:#c2a174;
-margin-bottom:28px;
-font-weight:500;
+.small-title {
+    font-size: 12px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: #c2a174;
+    margin-bottom: 28px;
+    font-weight: 500;
 }
 
-.main-title{
-font-family:'Cormorant Garamond',serif;
-font-size:72px;
-line-height:0.95;
-font-weight:400;
-color:#4a3428;
+.main-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 72px;
+    line-height: 0.95;
+    font-weight: 400;
+    color: #4a3428;
 }
 
-.main-title span{
-display:block;
-font-size:42px;
-margin:12px 0;
-color:#c9a57a;
+.main-title span {
+    display: block;
+    font-size: 42px;
+    margin: 12px 0;
+    color: #c9a57a;
 }
 
-.date{
-margin-top:34px;
-font-size:17px;
-letter-spacing:6px;
-color:#8a7060;
+.date {
+    margin-top: 34px;
+    font-size: 17px;
+    letter-spacing: 6px;
+    color: #8a7060;
 }
 
-h2{
-font-family:'Cormorant Garamond',serif;
-font-size:52px;
-font-weight:400;
-margin-bottom:18px;
-color:#5e4333;
+h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 52px;
+    font-weight: 400;
+    margin-bottom: 18px;
+    color: #5e4333;
 }
 
-.text{
-max-width:340px;
-font-size:17px;
-line-height:2;
-color:#5d4b40;
-margin-bottom:18px;
+.text {
+    width: 100%;
+    max-width: 340px;
+    font-size: 17px;
+    line-height: 2;
+    color: #5d4b40;
+    margin-bottom: 18px;
 }
 
-.signature{
-margin-top:18px;
-font-size:19px;
-font-style:italic;
-color:#b98c68;
+.signature {
+    margin-top: 18px;
+    font-size: 19px;
+    font-style: italic;
+    color: #b98c68;
+    margin-bottom: 20px;
 }
 
-.guest-name{
-font-family:'Cormorant Garamond',serif;
-font-size:68px;
-font-style:italic;
-font-weight:400;
-color:#c9a36c;
-margin-bottom:20px;
+.guest-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 68px;
+    font-style: italic;
+    font-weight: 400;
+    color: #c9a36c;
+    margin-bottom: 20px;
 }
 
 /* =========================================
    DIVIDER
 ========================================= */
-
-.mini-divider{
-margin:22px 0;
-font-size:20px;
-color:#d2a27d;
+.mini-divider {
+    margin: 22px 0;
+    font-size: 20px;
+    color: #d2a27d;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /* =========================================
    BUTTONS
 ========================================= */
-
 .open-btn,
 .map-btn,
-form button{
-margin-top:38px;
-padding:16px 34px;
-border:none;
-border-radius:999px;
-
-background:
-linear-gradient(
-135deg,
-#4d382d,
-#70523d
-);
-
-color:white;
-
-font-size:11px;
-letter-spacing:3px;
-text-transform:uppercase;
-cursor:pointer;
-
-box-shadow:
-0 10px 30px rgba(0,0,0,0.12);
-
-transition:.35s ease;
-
-text-decoration:none;
+form button {
+    margin-top: 28px;
+    margin-bottom: 20px;
+    padding: 16px 34px;
+    border: none;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #4d382d, #70523d);
+    color: white;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    transition: .35s ease;
+    text-decoration: none;
+    display: inline-block;
 }
 
 .open-btn:hover,
 .map-btn:hover,
-form button:hover{
-transform:translateY(-3px) scale(1.02);
-
-box-shadow:
-0 16px 36px rgba(0,0,0,0.18);
+form button:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 16px 36px rgba(0,0,0,0.18);
 }
 
 /* =========================================
-   NAVIGATION
+   NAVIGATION (BOTTOM BAR FIXED)
 ========================================= */
-
 .nav-buttons {
-    position: absolute;
+    position: fixed; /* Фиксируем на экране, чтобы кнопки всегда были доступны */
     bottom: 20px;
-    left: 0;
+    left: 50%;
+    transform: translateX(-50%);
     width: 100%;
+    max-width: 480px;
     display: flex;
     justify-content: space-between;
-    padding: 0 28px;
+    padding: 0 24px;
     z-index: 1000;
+    pointer-events: none; /* Пропускает клики сквозь контейнер на скролл */
 }
 
-.nav-btn{
-width:58px;
-height:58px;
-
-border-radius:50%;
-border:1px solid rgba(201,165,122,.5);
-
-background:rgba(255,255,255,.9);
-
-backdrop-filter:blur(8px);
-
-font-size:24px;
-cursor:pointer;
-
-transition:.3s ease;
-
-box-shadow:
-0 10px 30px rgba(0,0,0,0.08);
+.nav-btn {
+    pointer-events: auto; /* Возвращаем кликабельность кнопкам */
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 1px solid rgba(201,165,122,.5);
+    background: rgba(255,255,255,.9);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    font-size: 20px;
+    cursor: pointer;
+    transition: .3s ease;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.nav-btn:hover{
-transform:scale(1.08);
-}
-
-/* =========================================
-   DOTS
-========================================= */
-
-.dots{
-position:absolute;
-bottom:58px;
-
-display:flex;
-gap:10px;
-}
-
-.dot{
-width:8px;
-height:8px;
-border-radius:50%;
-
-background:#d8c5b2;
-
-transition:.3s;
-}
-
-.active-dot{
-background:#b08968;
-transform:scale(1.35);
+.nav-btn:hover {
+    transform: scale(1.08);
 }
 
 /* =========================================
-   COUNTDOWN
+   DOTS INDICATION
 ========================================= */
-
-.countdown{
-display:flex;
-justify-content:center;
-flex-wrap:wrap;
-gap:22px;
-
-margin-top:25px;
+.dots {
+    margin-top: auto; /* Выталкивает точки вниз контента страницы */
+    padding-top: 30px;
+    padding-bottom: 20px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    width: 100%;
 }
 
-.count-box{
-min-width:92px;
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #d8c5b2;
+    transition: .3s;
 }
 
-.count-box span{
-font-family:'Cormorant Garamond',serif;
-font-size:68px;
-color:#bc866f;
-}
-
-.count-box p{
-font-size:12px;
-letter-spacing:2px;
-text-transform:uppercase;
-margin-top:4px;
-color:#786457;
+.active-dot {
+    background: #b08968;
+    transform: scale(1.35);
 }
 
 /* =========================================
-   PHOTO
+   COUNTDOWN SYSTEM
 ========================================= */
-
-.photo-frame{
-margin-top:32px;
-
-width:240px;
-height:320px;
-
-border-radius:120px 120px 0 0;
-
-overflow:hidden;
-
-border:2px solid rgba(201,165,122,.5);
-
-background:white;
-
-box-shadow:
-0 20px 50px rgba(0,0,0,0.1);
+.countdown {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 22px;
+    margin-top: 25px;
+    width: 100%;
 }
 
-.photo-frame img{
-width:100%;
-height:100%;
-object-fit:cover;
+.count-box {
+    min-width: 85px;
+}
+
+.count-box span {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 58px;
+    color: #bc866f;
+    display: block;
+    line-height: 1;
+}
+
+.count-box p {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 6px;
+    color: #786457;
 }
 
 /* =========================================
-   TIMELINE
+   PHOTO FRAME
 ========================================= */
-
-.timeline{
-width:100%;
-max-width:340px;
-
-display:flex;
-flex-direction:column;
-gap:16px;
-
-margin-top:24px;
+.photo-frame {
+    margin-top: 24px;
+    margin-bottom: 24px;
+    width: 240px;
+    height: 320px;
+    border-radius: 120px 120px 0 0;
+    overflow: hidden;
+    border: 2px solid rgba(201,165,122,.5);
+    background: white;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.1);
 }
 
-.timeline-item{
-display:flex;
-align-items:center;
-gap:18px;
-
-padding:14px 18px;
-
-background:rgba(255,255,255,.9);
-
-border-radius:22px;
-
-backdrop-filter:blur(8px);
-
-box-shadow:
-0 10px 24px rgba(0,0,0,0.05);
-}
-
-.timeline-item span{
-font-size:18px;
-font-weight:700;
-color:#bc866f;
-min-width:72px;
-}
-
-.timeline-item p{
-font-size:16px;
-color:#4d382d;
+.photo-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 /* =========================================
-   COLORS
+   TIMELINE (COMPACT & RESPONSIVE)
 ========================================= */
-
-.colors{
-display:flex;
-justify-content:center;
-flex-wrap:wrap;
-gap:16px;
-
-margin-top:32px;
-max-width:340px;
+.timeline {
+    width: 100%;
+    max-width: 340px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 24px;
+    margin-bottom: 24px;
 }
 
-.colors div{
-width:62px;
-height:62px;
-
-border-radius:50%;
-
-box-shadow:
-0 10px 26px rgba(0,0,0,0.08);
-
-border:3px solid rgba(255,255,255,.7);
+.timeline-item {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 14px 18px;
+    background: rgba(255,255,255,.9);
+    border-radius: 22px;
+    box-shadow: 0 10px 24px rgba(0,0,0,0.05);
+    text-align: left;
 }
 
-.avoid-text{
-margin-top:32px;
-line-height:2;
-font-size:15px;
-color:#5d4b40;
+.timeline-item span {
+    font-size: 17px;
+    font-weight: 700;
+    color: #bc866f;
+    min-width: 65px;
+}
+
+.timeline-item p {
+    font-size: 15px;
+    color: #4d382d;
 }
 
 /* =========================================
-   MAP
+   DRESS CODE COLORS
 ========================================= */
-
-.map{
-width:100%;
-max-width:340px;
-height:240px;
-
-margin-top:24px;
-
-border-radius:26px;
-overflow:hidden;
-
-box-shadow:
-0 20px 50px rgba(0,0,0,0.1);
+.colors {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 24px;
+    margin-bottom: 24px;
+    max-width: 340px;
 }
 
-.map iframe{
-width:100%;
-height:100%;
-border:none;
+.colors div {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    box-shadow: 0 10px 26px rgba(0,0,0,0.08);
+    border: 3px solid rgba(255,255,255,.7);
 }
 
 /* =========================================
-   FORM
+   MAP BOX
 ========================================= */
+.map {
+    width: 100%;
+    max-width: 340px;
+    height: 220px;
+    margin-top: 24px;
+    margin-bottom: 12px;
+    border-radius: 26px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+}
 
-form{
-width:100%;
-max-width:340px;
+.map iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
 
-display:flex;
-flex-direction:column;
-gap:18px;
-
-margin-top:22px;
+/* =========================================
+   RSVP FORM
+========================================= */
+form {
+    width: 100%;
+    max-width: 340px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 22px;
 }
 
 input,
-select{
-padding:16px 18px;
-
-border-radius:18px;
-
-border:1px solid #eadfd4;
-
-background:rgba(255,255,255,.9);
-
-font-size:15px;
-color:#4d382d;
-
-outline:none;
-
-transition:.3s ease;
+select {
+    padding: 16px 18px;
+    border-radius: 18px;
+    border: 1px solid #eadfd4;
+    background: rgba(255,255,255,.9);
+    font-size: 15px;
+    color: #4d382d;
+    outline: none;
+    transition: .3s ease;
+    width: 100%;
 }
 
 input:focus,
-select:focus{
-border-color:#c9a57a;
-
-box-shadow:
-0 0 0 5px rgba(201,165,122,.15);
+select:focus {
+    border-color: #c9a57a;
+    box-shadow: 0 0 0 5px rgba(201,165,122,.15);
 }
 
 /* =========================================
-   HEART
+   HEART GRAPHIC
 ========================================= */
-
-.heart{
-font-size:28px;
-color:#d1a37f;
-margin-bottom:18px;
+.heart {
+    font-size: 24px;
+    color: #d1a37f;
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /* =========================================
-   FLORALS
+   FLORALS DECORATION (SAFE POSITIONING)
 ========================================= */
-
 .floral,
-.floating-leaf{
-position:absolute;
-
-background-size:contain;
-background-repeat:no-repeat;
-
-pointer-events:none;
-opacity:.12;
+.floating-leaf {
+    position: absolute;
+    background-size: contain;
+    background-repeat: no-repeat;
+    pointer-events: none; /* Декор не мешает тапам и кликам */
+    opacity: .12;
+    z-index: 1;
 }
 
-/* TOP */
-
-.floral-top{
-top:-20px;
-left:-20px;
-
-width:240px;
-height:240px;
-
-background-image:url('https://png.pngtree.com/png-vector/20231017/ourmid/pngtree-watercolor-eucalyptus-leaf-border-frame-png-image_10225058.png');
+.floral-top {
+    top: -20px;
+    left: -20px;
+    width: 200px;
+    height: 200px;
+    background-image: url('https://png.pngtree.com/png-vector/20231017/ourmid/pngtree-watercolor-eucalyptus-leaf-border-frame-png-image_10225058.png');
 }
 
-/* BOTTOM */
-
-.floral-bottom{
-bottom:-20px;
-right:-20px;
-
-width:240px;
-height:240px;
-
-transform:rotate(180deg);
-
-background-image:url('https://png.pngtree.com/png-vector/20231017/ourmid/pngtree-watercolor-eucalyptus-leaf-border-frame-png-image_10225058.png');
+.floral-bottom {
+    bottom: -20px;
+    right: -20px;
+    width: 200px;
+    height: 200px;
+    transform: rotate(180deg);
+    background-image: url('https://png.pngtree.com/png-vector/20231017/ourmid/pngtree-watercolor-eucalyptus-leaf-border-frame-png-image_10225058.png');
 }
 
-/* FLOATING */
-
-.floating-leaf{
-width:170px;
-height:170px;
-
-animation:float 7s ease-in-out infinite;
+.floating-leaf {
+    width: 140px;
+    height: 140px;
 }
 
-.leaf-1{
-top:0;
-left:-30px;
-
-background-image:url('https://png.pngtree.com/png-vector/20231017/ourmid/pngtree-watercolor-eucalyptus-leaf-border-frame-png-image_10225058.png');
-}
-
-.leaf-2{
-bottom:0;
-right:-30px;
-
-transform:rotate(180deg);
-
-background-image:url('https://png.pngtree.com/png-vector/20231017/ourmid/pngtree-watercolor-eucalyptus-leaf-border-frame-png-image_10225058.png');
-}
-
-.leaf-3{
-top:0;
-right:-30px;
-
-background-image:url('https://png.pngtree.com/png-vector/20231017/ourmid/pngtree-watercolor-eucalyptus-leaf-border-frame-png-image_10225058.png');
-}
-
-.leaf-4{
-bottom:0;
-left:-30px;
-
-transform:rotate(180deg);
-
-background-image:url('https://png.pngtree.com/png-vector/20231017/ourmid/pngtree-watercolor-eucalyptus-leaf-border-frame-png-image_10225058.png');
-}
+.leaf-1 { top: 0; left: -30px; background-image: url('https://png.pngtree.com/png-vector/20231017/ourmid/pngtree-watercolor-eucalyptus-leaf-border-frame-png-image_10225058.png'); }
+.leaf-2 { bottom: 0; right: -30px; transform: rotate(180deg); background-image: url('https://png.pngtree.com/png-vector/20231017/ourmid/pngtree-watercolor-eucalyptus-leaf-border-frame-png-image_10225058.png'); }
+.leaf-3 { top: 0; right: -30px; background-image: url('https://png.pngtree.com/png-vector/20231017/ourmid/pngtree-watercolor-eucalyptus-leaf-border-frame-png-image_10225058.png'); }
+.leaf-4 { bottom: 0; left: -30px; transform: rotate(180deg); background-image: url('https://png.pngtree.com/png-vector/20231017/ourmid/pngtree-watercolor-eucalyptus-leaf-border-frame-png-image_10225058.png'); }
 
 /* =========================================
-   ANIMATION
+   GLASS & HOVER SYSTEM
 ========================================= */
-
-@keyframes float{
-
-0%{
-transform:translateY(0px);
-}
-
-50%{
-transform:translateY(-10px);
-}
-
-100%{
-transform:translateY(0px);
-}
-
-}
-
-/* =========================================
-   MOBILE
-========================================= */
-
-@media(max-width:480px){
-
-.main-title{
-font-size:60px;
-}
-
-.guest-name{
-font-size:58px;
-}
-
-h2{
-font-size:44px;
-}
-
-.count-box span{
-font-size:56px;
-}
-
-.text{
-font-size:16px;
-line-height:1.9;
-}
-
-}
-
-/* =========================================
-   SAFE AREA
-========================================= */
-
-@supports(padding:max(0px)){
-
-.page{
-padding-left:max(24px, env(safe-area-inset-left));
-padding-right:max(24px, env(safe-area-inset-right));
-padding-bottom:max(120px, env(safe-area-inset-bottom));
-}
-
-}
-/* =========================================
-   PREMIUM ANIMATIONS
-========================================= */
-
-/* PAGE FADE */
-
-.page{
-animation:pageFade .9s ease;
-}
-
-/* TITLE APPEAR */
-
-.main-title,
-h2,
-.guest-name{
-animation:titleReveal 1.4s ease;
-}
-
-/* TEXT */
-
-.text,
-.date,
-.small-title{
-animation:textFade 1.8s ease;
-}
-
-/* PHOTO */
-
-.photo-frame{
-animation:photoFloat 6s ease-in-out infinite;
-}
-
-/* BUTTONS */
-
-.open-btn,
-.nav-btn,
-.map-btn,
-form button{
-animation:buttonGlow 4s ease-in-out infinite;
-}
-
-/* TIMELINE */
-
-.timeline-item{
-animation:timelineAppear 1s ease;
-}
-
-/* COLORS */
-
-.colors div{
-animation:colorPulse 5s ease-in-out infinite;
-}
-
-/* HEART */
-
-.heart{
-animation:heartBeat 2s infinite;
-}
-
-/* COUNTDOWN */
-
-.count-box{
-animation:counterFloat 5s ease-in-out infinite;
-}
-
-/* MAP */
-
-.map{
-animation:mapFloat 8s ease-in-out infinite;
-}
-
-/* LEAVES */
-
-.floating-leaf{
-animation:leafFloat 8s ease-in-out infinite;
-}
-
-/* =========================================
-   KEYFRAMES
-========================================= */
-
-/* PAGE */
-
-@keyframes pageFade{
-
-from{
-opacity:0;
-transform:translateY(40px);
-}
-
-to{
-opacity:1;
-transform:translateY(0);
-}
-
-}
-
-/* TITLE */
-
-@keyframes titleReveal{
-
-0%{
-opacity:0;
-transform:
-translateY(40px)
-scale(.95);
-}
-
-100%{
-opacity:1;
-transform:
-translateY(0)
-scale(1);
-}
-
-}
-
-/* TEXT */
-
-@keyframes textFade{
-
-0%{
-opacity:0;
-transform:translateY(20px);
-}
-
-100%{
-opacity:1;
-transform:translateY(0);
-}
-
-}
-
-/* PHOTO */
-
-@keyframes photoFloat{
-
-0%{
-transform:
-translateY(0px)
-rotate(0deg);
-}
-
-50%{
-transform:
-translateY(-10px)
-rotate(.5deg);
-}
-
-100%{
-transform:
-translateY(0px)
-rotate(0deg);
-}
-
-}
-
-/* BUTTON */
-
-@keyframes buttonGlow{
-
-0%{
-box-shadow:
-0 10px 30px rgba(0,0,0,.10);
-}
-
-50%{
-box-shadow:
-0 15px 40px rgba(201,165,122,.30);
-}
-
-100%{
-box-shadow:
-0 10px 30px rgba(0,0,0,.10);
-}
-
-}
-
-/* TIMELINE */
-
-@keyframes timelineAppear{
-
-0%{
-opacity:0;
-transform:
-translateX(-30px);
-}
-
-100%{
-opacity:1;
-transform:
-translateX(0);
-}
-
-}
-
-/* COLORS */
-
-@keyframes colorPulse{
-
-0%{
-transform:scale(1);
-}
-
-50%{
-transform:scale(1.08);
-}
-
-100%{
-transform:scale(1);
-}
-
-}
-
-/* HEART */
-
-@keyframes heartBeat{
-
-0%{
-transform:scale(1);
-}
-
-25%{
-transform:scale(1.12);
-}
-
-40%{
-transform:scale(1);
-}
-
-60%{
-transform:scale(1.12);
-}
-
-100%{
-transform:scale(1);
-}
-
-}
-
-/* COUNTER */
-
-@keyframes counterFloat{
-
-0%{
-transform:translateY(0px);
-}
-
-50%{
-transform:translateY(-8px);
-}
-
-100%{
-transform:translateY(0px);
-}
-
-}
-
-/* MAP */
-
-@keyframes mapFloat{
-
-0%{
-transform:translateY(0px);
-}
-
-50%{
-transform:translateY(-6px);
-}
-
-100%{
-transform:translateY(0px);
-}
-
-}
-
-/* LEAF */
-
-@keyframes leafFloat{
-
-0%{
-transform:
-translateY(0px)
-rotate(0deg);
-}
-
-50%{
-transform:
-translateY(-12px)
-rotate(3deg);
-}
-
-100%{
-transform:
-translateY(0px)
-rotate(0deg);
-}
-
-}
-
-/* =========================================
-   HOVER EFFECTS
-========================================= */
-
-.timeline-item:hover{
-
-transform:
-translateY(-4px)
-scale(1.02);
-
-transition:.35s ease;
-
-}
-
-.colors div:hover{
-
-transform:
-scale(1.15);
-
-transition:.35s ease;
-
-}
-
-.photo-frame:hover{
-
-transform:
-scale(1.03);
-
-transition:.5s ease;
-
-}
-
-/* =========================================
-   GLASS EFFECT
-========================================= */
-
 .timeline-item,
 .map,
 .photo-frame,
 form input,
-form select{
+form select {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
 
-backdrop-filter:blur(10px);
+.timeline-item:hover { transform: translateY(-3px); transition: .3s; }
+.colors div:hover { transform: scale(1.1); transition: .3s; }
+.photo-frame:hover { transform: scale(1.02); transition: .3s; }
 
+/* =========================================
+   MEDIA ADAPTIVITY
+========================================= */
+@media(max-width: 480px) {
+    .main-title { font-size: 54px; }
+    .guest-name { font-size: 52px; }
+    h2 { font-size: 38px; }
+    .count-box span { font-size: 48px; }
+    .text { font-size: 15px; line-height: 1.8; }
+    .page { padding-top: 50px; padding-bottom: 120px; }
+}
+
+@supports(padding: max(0px)) {
+    .page {
+        padding-left: max(24px, env(safe-area-inset-left));
+        padding-right: max(24px, env(safe-area-inset-right));
+    }
 }
 
 /* =========================================
-   SMOOTH TRANSITIONS
+   PREMIUM ANIMATIONS (REDUCED TRANSITION OVERLAP)
 ========================================= */
+.page.active .main-title,
+.page.active h2,
+.page.active .guest-name { animation: titleReveal 1s ease forwards; }
 
-*{
-transition:
-background .3s ease,
-color .3s ease,
-transform .4s ease,
-opacity .4s ease;
+.page.active .text,
+.page.active .date,
+.page.active .small-title { animation: textFade 1.2s ease forwards; }
+
+.photo-frame { animation: photoFloat 6s ease-in-out infinite; }
+.heart { animation: heartBeat 2s infinite; }
+
+@keyframes titleReveal {
+    0% { opacity: 0; transform: translateY(20px) scale(.98); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
 }
-.page{
-padding-top: max(80px, env(safe-area-inset-top));
-padding-bottom: max(160px, env(safe-area-inset-bottom));
+
+@keyframes textFade {
+    0% { opacity: 0; transform: translateY(15px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes photoFloat {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-6px) rotate(0.5deg); }
+}
+
+@keyframes heartBeat {
+    0%, 40%, 100% { transform: scale(1); }
+    25%, 60% { transform: scale(1.1); }
 }
