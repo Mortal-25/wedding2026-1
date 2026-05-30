@@ -4,382 +4,366 @@
 * {
     margin: 0;
     padding: 0;
-    box-sizing: border-box !important;
+    box-sizing: border-box;
 }
 
-html,
-body {
-    width: 100% !important;
-    min-height: 100vh !important;
-    background-color: #efe9e2 !important;
+html, body {
+    width: 100%;
+    min-height: 100vh;
+    background-color: #efe9e2;
     font-family: 'Montserrat', sans-serif;
     color: #4d382d;
-    overflow-x: hidden !important;
-    overflow-y: auto !important; /* Принудительно включаем вертикальный скролл */
-    scroll-behavior: smooth;
-    -webkit-text-size-adjust: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /* =========================================
-   2. ГЛАВНЫЙ КОНТЕЙНЕР (ЦЕНТРИРОВАНИЕ)
+   2. ГЛАВНЫЙ КОНТЕЙНЕР КНИГИ
 ========================================= */
 .book {
-    width: 100% !important;
-    max-width: 480px !important;
-    margin: 0 auto !important;
-    background: linear-gradient(180deg, #fdfaf6 0%, #f8f3ed 100%) !important;
-    box-shadow: 0 0 40px rgba(77, 56, 45, 0.05);
-    position: relative !important;
-    min-height: 100vh !important;
-    overflow: hidden !important; /* Прячем страницы, которые выходят за пределы */
+    width: 100%;
+    max-width: 480px;
+    height: 100vh;
+    background: linear-gradient(180deg, #fdfaf6 0%, #f8f3ed 100%);
+    box-shadow: 0 0 40px rgba(77, 56, 45, 0.1);
+    position: relative;
+    overflow: hidden;
 }
 
 /* =========================================
-   3. СЕКЦИИ САЙТА (ПОСТРАНИЧНОЕ НАЛОЖЕНИЕ)
+   3. СЕКЦИИ-СТРАНИЦЫ (НАЛОЖЕНИЕ ДРУГ НА ДРУГА)
 ========================================= */
-section, 
-.page {
-    /* Абсолютное позиционирование, чтобы страницы легли друг на друга стопкой */
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    min-height: 100vh !important;
-    
-    /* Внутренние отступы и центрирование контента */
-    padding: 60px 24px !important; 
-    display: flex !important; 
-    flex-direction: column !important;
-    align-items: center !important;
-    text-align: center !important;
-    
-    /* Скролл внутри конкретной страницы, если контент не влезает на маленьком экране */
-    overflow-y: auto !important; 
-
-    /* По умолчанию страницы скрыты и прозрачны */
-    opacity: 0 !important;
-    visibility: hidden !important;
-    transition: opacity 0.4s ease, visibility 0.4s ease !important;
-    z-index: 1 !important;
+section, .page {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 40px 24px 80px 24px; /* Отступы с запасом снизу под стрелки */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; /* Контент идет сверху вниз */
+    text-align: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+    overflow-y: auto; /* Позволяет форме прокручиваться, если экран сверхмаленький */
+    z-index: 1;
 }
 
-/* Специфический класс для активной страницы, которую показывает JS */
-section.active,
-.page.active {
-    opacity: 1 !important;
-    visibility: visible !important;
-    z-index: 10 !important; /* Выводим активную страницу на передний план */
-    position: relative !important; /* Позволяет контейнеру .book адаптироваться под высоту */
+/* Активная страница */
+section.active, .page.active {
+    opacity: 1;
+    visibility: visible;
+    z-index: 10;
 }
 
-/* Корректируем отступы первой страницы */
-section:first-of-type,
-.page:first-of-type {
-    padding-top: 80px !important;
-    padding-bottom: 40px !important;
+/* Первая приветственная страница */
+section:first-of-type, .page:first-of-type {
+    justify-content: center; /* Центрируем первый экран идеально посредине */
+    padding-bottom: 40px;
 }
 
 /* =========================================
-   4. ТИПОГРАФИКА И ШРИФТЫ
+   4. ТИПОГРАФИКА
 ========================================= */
 .small-title {
-    font-size: 11px !important;
-    letter-spacing: 5px !important;
-    text-transform: uppercase !important;
-    color: #c2a174 !important;
-    margin-bottom: 20px !important;
-    font-weight: 500 !important;
-    display: block;
+    font-size: 11px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: #c2a174;
+    margin-bottom: 15px;
+    font-weight: 500;
 }
 
 .main-title {
-    font-family: 'Cormorant Garamond', serif !important;
-    font-size: 60px !important;
-    line-height: 0.95 !important;
-    font-weight: 400 !important;
-    color: #4a3428 !important;
-    margin-bottom: 15px !important;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 54px;
+    line-height: 0.95;
+    font-weight: 400;
+    color: #4a3428;
+    margin-bottom: 15px;
 }
 
 .main-title span {
-    display: block !important;
-    font-size: 36px !important;
-    margin: 6px 0 !important;
-    color: #c9a57a !important;
+    display: block;
+    font-size: 32px;
+    margin: 6px 0;
+    color: #c9a57a;
 }
 
 .date {
-    margin-top: 24px !important;
-    font-size: 15px !important;
-    letter-spacing: 5px !important;
-    color: #8a7060 !important;
-    display: block;
+    margin-top: 15px;
+    font-size: 15px;
+    letter-spacing: 5px;
+    color: #8a7060;
 }
 
 h2 {
-    font-family: 'Cormorant Garamond', serif !important;
-    font-size: 42px !important;
-    font-weight: 400 !important;
-    margin-bottom: 12px !important;
-    color: #5e4333 !important;
-    line-height: 1.2 !important;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 400;
+    margin-bottom: 10px;
+    color: #5e4333;
+    line-height: 1.2;
 }
 
 .text {
-    width: 100% !important;
-    max-width: 340px !important;
-    font-size: 16px !important;
-    line-height: 1.75 !important;
-    color: #5d4b40 !important;
-    margin-bottom: 16px !important;
+    width: 100%;
+    max-width: 340px;
+    font-size: 15px;
+    line-height: 1.65;
+    color: #5d4b40;
+    margin-bottom: 12px;
 }
 
 .signature {
-    margin-top: 12px !important;
-    font-size: 18px !important;
-    font-style: italic !important;
-    color: #b98c68 !important;
-    margin-bottom: 10px !important;
+    font-size: 18px;
+    font-style: italic;
+    color: #b98c68;
+    margin-top: 5px;
 }
 
 .guest-name {
-    font-family: 'Cormorant Garamond', serif !important;
-    font-size: 54px !important;
-    font-style: italic !important;
-    font-weight: 400 !important;
-    color: #c9a36c !important;
-    margin-bottom: 14px !important;
-    line-height: 1.1 !important;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 46px;
+    font-style: italic;
+    font-weight: 400;
+    color: #c9a36c;
+    margin-bottom: 10px;
 }
 
 /* =========================================
-   5. КНОПКИ И ССЫЛКИ (КОРРЕКЦИЯ)
+   5. ОФОРМЛЕНИЕ КНОПОК И НАВИГАЦИИ
 ========================================= */
-/* Если ты хочешь вернуть стрелочки и точки навигации, удали или закомментируй этот блок. 
-   Если перелистывание должно быть ТОЛЬКО по клику на экран, свайпу или кнопке "Відкрити запрошення", оставь как есть */
-.nav-buttons,
-.dots {
-    display: none !important;
-}
-/* Оставляем кастомные кнопки "назад/вперед" доступными, если они внутри разметки страниц */
-.back-btn,
-.next-btn {
+/* Основные стили для всех интерактивных кнопок сайта */
+.open-btn, .map-btn, .submit-btn {
+    margin-top: 15px;
+    padding: 14px 32px;
+    border: none;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #4d382d, #70523d);
+    color: white;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-decoration: none;
     display: inline-block;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.open-btn:hover, .map-btn:hover, .submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+
+/* Контейнер для нижних стрелочек навигации */
+.nav-buttons {
+    position: absolute;
+    bottom: 25px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    z-index: 20;
+}
+
+/* Круглые элегантные стрелочки */
+.nav-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid #eadfd4;
+    background: rgba(255, 255, 255, 0.8);
+    color: #4d382d;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+    transition: background 0.2s, transform 0.2s;
+}
+
+.nav-btn:hover {
+    background: #4d382d;
+    color: white;
+    transform: scale(1.05);
 }
 
 /* =========================================
    6. ТАЙМЕР ОБРАТНОГО ОТСЧЕТА
 ========================================= */
 .countdown {
-    display: flex !important;
-    justify-content: center !important;
-    gap: 16px !important;
-    margin-top: 20px !important;
-    width: 100% !important;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 15px;
+    width: 100%;
 }
 
 .count-box {
-    min-width: 75px !important;
+    min-width: 70px;
 }
 
 .count-box span {
-    font-family: 'Cormorant Garamond', serif !important;
-    font-size: 44px !important;
-    color: #bc866f !important;
-    display: block !important;
-    line-height: 1 !important;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 38px;
+    color: #bc866f;
+    display: block;
+    line-height: 1;
 }
 
 .count-box p {
-    font-size: 10px !important;
-    letter-spacing: 2px !important;
-    text-transform: uppercase !important;
-    margin-top: 4px !important;
-    color: #786457 !important;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-top: 4px;
+    color: #786457;
 }
 
 /* =========================================
-   7. СВАДЕБНАЯ ФОТО-РАМКА (АРКА)
+   7. СВАДЕБНАЯ ФОТО-РАМКА
 ========================================= */
 .photo-frame {
-    margin-top: 15px !important;
-    margin-bottom: 15px !important;
-    width: 250px !important;
-    height: 330px !important;
-    border-radius: 125px 125px 0 0 !important; /* Изящная скругленная арка сверху */
-    overflow: hidden !important;
-    border: 1px solid rgba(201,165,122,.4) !important;
-    background: white !important;
-    box-shadow: 0 12px 30px rgba(0,0,0,0.06) !important;
+    margin-top: 10px;
+    width: 220px;
+    height: 290px;
+    border-radius: 110px 110px 0 0;
+    overflow: hidden;
+    border: 1px solid rgba(201,165,122,.4);
+    background: white;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.06);
 }
 
 .photo-frame img {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 /* =========================================
    8. ТАЙМЛАЙН / ПРОГРАММА ДНЯ
 ========================================= */
 .timeline {
-    width: 100% !important;
-    max-width: 340px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 12px !important;
-    margin-top: 20px !important;
-    margin-bottom: 20px !important;
+    width: 100%;
+    max-width: 340px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 15px;
 }
 
 .timeline-item {
-    display: flex !important;
-    align-items: center !important;
-    gap: 16px !important;
-    padding: 14px 20px !important;
-    background: rgba(255,255,255,.85) !important;
-    border-radius: 20px !important;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.03) !important;
-    text-align: left !important;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 10px 16px;
+    background: rgba(255,255,255,.85);
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+    text-align: left;
     backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
 }
 
 .timeline-item span {
-    font-size: 16px !important;
-    font-weight: 700 !important;
-    color: #bc866f !important;
-    min-width: 65px !important;
+    font-size: 15px;
+    font-weight: 700;
+    color: #bc866f;
+    min-width: 55px;
 }
 
 .timeline-item p {
-    font-size: 14px !important;
-    color: #4d382d !important;
-    line-height: 1.3 !important;
+    font-size: 13px;
+    color: #4d382d;
+    line-height: 1.3;
 }
 
 /* =========================================
-   9. ДРЕСС-КОД ПАЛИТРА ТАКТИЛЬНЫХ ЦВЕТОВ
+   9. ПАЛИТРА ДРЕСС-КОДА
 ========================================= */
 .colors {
-    display: flex !important;
-    justify-content: center !important;
-    flex-wrap: wrap !important;
-    gap: 12px !important;
-    margin-top: 20px !important;
-    margin-bottom: 20px !important;
-    max-width: 340px !important;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+    max-width: 340px;
 }
 
 .colors div {
-    width: 46px !important;
-    height: 46px !important;
-    border-radius: 50% !important;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.06) !important;
-    border: 3px solid rgba(255,255,255,.8) !important;
-    transition: transform 0.2s ease !important;
-}
-
-.colors div:hover {
-    transform: scale(1.08) !important;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    border: 2px solid rgba(255,255,255,.8);
 }
 
 /* =========================================
-   10. ИНТЕГРАЦИЯ КАРТЫ ЛОКАЦИИ
+   10. КАРТА ЛОКАЦИИ
 ========================================= */
 .map {
-    width: 100% !important;
-    max-width: 340px !important;
-    height: 200px !important;
-    margin-top: 20px !important;
-    margin-bottom: 12px !important;
-    border-radius: 24px !important;
-    overflow: hidden !important;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.06) !important;
-}
-
-.map iframe {
-    width: 100% !important;
-    height: 100% !important;
-    border: none !important;
+    width: 100%;
+    max-width: 340px;
+    height: 180px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+    margin-bottom: 15px;
 }
 
 /* =========================================
-   11. АДАПТИВНАЯ ФОРМА RSVP
+   11. ФОРМА RSVP
 ========================================= */
 form {
-    width: 100% !important;
-    max-width: 340px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 12px !important;
-    margin-top: 16px !important;
+    width: 100%;
+    max-width: 340px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 5px;
 }
 
-input,
-select {
-    padding: 14px 16px !important;
-    border-radius: 16px !important;
-    border: 1px solid #eadfd4 !important;
-    background: rgba(255,255,255,.9) !important;
-    font-size: 14px !important;
-    color: #4d382d !important;
-    outline: none !important;
-    transition: border-color 0.2s, box-shadow 0.2s !important;
-    width: 100% !important;
+input, select {
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid #eadfd4;
+    background: rgba(255,255,255,.9);
+    font-size: 13px;
+    color: #4d382d;
+    outline: none;
+    width: 100%;
+    font-family: 'Montserrat', sans-serif;
 }
 
-input:focus,
-select:focus {
-    border-color: #c9a57a !important;
-    box-shadow: 0 0 0 4px rgba(201,165,122,.1) !important;
+input:focus, select:focus {
+    border-color: #c9a57a;
 }
 
 /* =========================================
-   12. ДЕКОРАТИВНЫЕ ЭЛЕМЕНТЫ (АККУРАТНЫЙ СЛОЙ)
+   12. ДЕКОРАТИВНЫЕ ЭЛЕМЕНТЫ
 ========================================= */
-.mini-divider {
-    margin: 14px 0 !important;
-    font-size: 18px !important;
-    color: #d2a27d !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
+.mini-divider, .heart {
+    margin: 8px 0;
+    font-size: 16px;
+    color: #d2a27d;
 }
 
-.heart {
-    font-size: 20px !important;
-    color: #d1a37f !important;
-    margin-bottom: 10px !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
+.floral, .floating-leaf {
+    position: absolute;
+    background-size: contain;
+    background-repeat: no-repeat;
+    pointer-events: none;
+    opacity: .05;
+    z-index: 1;
 }
-
-.floral,
-.floating-leaf {
-    position: absolute !important;
-    background-size: contain !important;
-    background-repeat: no-repeat !important;
-    pointer-events: none !important; /* Растительный декор не мешает кликам */
-    opacity: .07 !important;
-    z-index: 1 !important;
-}
-
-.floral-top { top: 15px !important; left: 15px !important; width: 130px !important; height: 130px !important; background-image: url('https://png.pngtree.com/png-vector/20231017/ourmid/pngtree-watercolor-eucalyptus-leaf-border-frame-png-image_10225058.png') !important; }
-.floral-bottom { bottom: 15px !important; right: 15px !important; width: 130px !important; height: 130px !important; transform: rotate(180deg) !important; background-image: url('https://png.pngtree.com/png-vector/20231017/ourmid/pngtree-watercolor-eucalyptus-leaf-border-frame-png-image_10225058.png') !important; }
-.leaf-1 { top: 15px !important; left: 15px !important; width: 90px !important; height: 90px !important; background-image: url('https://png.pngtree.com/png-vector/20231017/ourmid/pngtree-watercolor-eucalyptus-leaf-border-frame-png-image_10225058.png') !important; }
-.leaf-2 { bottom: 15px !important; right: 15px !important; width: 90px !important; height: 90px !important; transform: rotate(180deg) !important; background-image: url('https://png.pngtree.com/png-vector/20231017/ourmid/pngtree-watercolor-eucalyptus-leaf-border-frame-png-image_10225058.png') !important; }
-
-/* =========================================
-   13. СМАРТФОННАЯ ОПТИМИЗАЦИЯ
-========================================= */
-@media (max-width: 480px) {
-    .main-title { font-size: 46px !important; }
-    .guest-name { font-size: 38px !important; }
-    h2 { font-size: 32px !important; }
-    .count-box span { font-size: 36px !important; }
-    .text { font-size: 15px !important; }
-    section, .page { padding: 40px 18px !important; }
-}
+.floral-top { top: 15px; left: 15px; width: 100px; height: 100px; background-image: url('https://png.pngtree.com/png-vector/20231017/ourmid/pngtree-watercolor-eucalyptus-leaf-border-frame-png-image_10225058.png'); }
+.floral-bottom { bottom: 15px; right: 15px; width: 100px; height: 100px; transform: rotate(180deg); background-image: url('https://png.pngtree.com/png-vector/20231017/ourmid/pngtree-watercolor-eucalyptus-leaf-border-frame-png-image_10225058.png'); }
+.leaf-1 { top: 15px; left: 15px; width: 70px; height: 70px; background-image: url('https://png.pngtree.com/png-vector/20231017/ourmid/pngtree-watercolor-eucalyptus-leaf-border-frame-png-image_10225058.png'); }
+.leaf-2 { bottom: 15px; right: 15px; width: 70px; height: 70px; transform: rotate(180deg); background-image: url('https://png.pngtree.com/png-vector/20231017/ourmid/pngtree-watercolor-eucalyptus-leaf-border-frame-png-image_10225058.png'); }
