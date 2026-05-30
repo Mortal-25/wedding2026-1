@@ -1,4 +1,4 @@
-const pages = document.querySelectorAll('.page');
+const pages = document.querySelectorAll('.page, section');
 let currentPage = 0;
 let isAnimating = false;
 
@@ -6,7 +6,7 @@ function render() {
     pages.forEach((page, index) => {
         if (index === currentPage) {
             page.classList.add('active');
-            page.scrollTop = 0; // Сбрасываем скролл наверх при открытии новой страницы
+            page.scrollTop = 0; 
         } else {
             page.classList.remove('active');
         }
@@ -29,7 +29,7 @@ function setPage(index) {
 function goNextPage() { setPage(currentPage + 1); }
 function goPrevPage() { setPage(currentPage - 1); }
 
-// КЛИКИ ПО КНОПКАМ НАВИГАЦИИ (Назначаем на все существующие стрелочки)
+// Навигация кнопками
 document.querySelectorAll('.next-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -44,14 +44,14 @@ document.querySelectorAll('.back-btn').forEach(btn => {
     });
 });
 
-// НАВИГАЦИЯ КЛАВИАТУРОЙ С ПК (Оставляем для удобства)
+// Навигация стрелочками клавиатуры на ПК
 document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowRight') goNextPage();
     if (e.key === 'ArrowLeft') goPrevPage();
 });
 
-// ТАЙМЕР ОБРАТНОГО ОТСЧЕТА
-const targetDate = new Date("August 1, 2026 14:00:00").getTime();
+// ТАЙМЕР ОБРАТНОГО ОТСЧЕТА (Используем ISO-формат даты YYYY-MM-DD для корректной работы на iOS)
+const targetDate = new Date("2026-08-01T14:00:00").getTime();
 
 function updateCountdown() {
     const now = Date.now();
@@ -96,7 +96,7 @@ const form = document.getElementById('rsvp-form');
 if (form) {
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const btn = form.querySelector('.submit-btn');
+        const btn = form.querySelector('.submit-btn') || form.querySelector('button[type="submit"]');
         const oldText = btn.innerText;
         btn.innerText = "Надсилання...";
         btn.disabled = true;
