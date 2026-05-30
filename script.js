@@ -1,5 +1,4 @@
 const pages = document.querySelectorAll('.page');
-const dots = document.querySelectorAll('.dot');
 let currentPage = 0;
 let isAnimating = false;
 
@@ -7,23 +6,11 @@ function render() {
     pages.forEach((page, index) => {
         if (index === currentPage) {
             page.classList.add('active');
+            page.scrollTop = 0; // Сбрасываем скролл наверх при открытии новой страницы
         } else {
             page.classList.remove('active');
         }
     });
-
-    // Обновляем точки навигации
-    dots.forEach((dot, index) => {
-        if (index === currentPage) {
-            dot.classList.add('active-dot');
-        } else {
-            dot.classList.remove('active-dot');
-        }
-    });
-
-    // Сбрасываем внутренний скролл страницы наверх при перелистывании
-    const activePage = document.querySelector('.page.active');
-    if (activePage) activePage.scrollTop = 0;
 }
 
 function setPage(index) {
@@ -42,53 +29,25 @@ function setPage(index) {
 function goNextPage() { setPage(currentPage + 1); }
 function goPrevPage() { setPage(currentPage - 1); }
 
-// КЛИКИ ПО СТРЕЛОЧКАМ
-document.querySelector('.next-btn')?.addEventListener('click', (e) => { e.stopPropagation(); goNextPage(); });
-document.querySelector('.back-btn')?.addEventListener('click', (e) => { e.stopPropagation(); goPrevPage(); });
+// КЛИКИ ПО КНОПКАМ НАВИГАЦИИ (Назначаем на все существующие стрелочки)
+document.querySelectorAll('.next-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        goNextPage();
+    });
+});
 
-// СВАЙПЫ ДЛЯ СМАРТФОНОВ
-let startX = 0;
-let startY = 0;
+document.querySelectorAll('.back-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        goPrevPage();
+    });
+});
 
-document.addEventListener('touchstart', (e) => {
-    startX = e.changedTouches[0].screenX;
-    startY = e.changedTouches[0].screenY;
-}, { passive: true });
-
-document.addEventListener('touchend', (e) => {
-    const endX = e.changedTouches[0].screenX;
-    const endY = e.changedTouches[0].screenY;
-
-    const diffX = startX - endX;
-    const diffY = startY - endY;
-
-    // Если движение было больше по вертикали (скролл внутри страницы), игнорируем свайп книги
-    if (Math.abs(diffY) > Math.abs(diffX)) return;
-    if (Math.abs(diffX) < 50) return; // Минимальное расстояние для свайпа
-
-    if (diffX > 0) goNextPage();
-    else goPrevPage();
-}, { passive: true });
-
-// НАВИГАЦИЯ КЛАВИАТУРОЙ С ПК
+// НАВИГАЦИЯ КЛАВИАТУРОЙ С ПК (Оставляем для удобства)
 document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowRight') goNextPage();
     if (e.key === 'ArrowLeft') goPrevPage();
-});
-
-// КЛИКИ ПО БОКОВЫМ ОБЛАСТЯМ ЭКРАНА (Исключая интерактивные элементы)
-pages.forEach(page => {
-    page.addEventListener('click', (e) => {
-        const tag = e.target.tagName;
-        if (['BUTTON', 'INPUT', 'SELECT', 'OPTION', 'A', 'IFRAME'].includes(tag)) return;
-        if (e.target.closest('form') || e.target.closest('.nav-buttons')) return;
-
-        if (e.clientX > window.innerWidth / 2) {
-            goNextPage();
-        } else {
-            goPrevPage();
-        }
-    });
 });
 
 // ТАЙМЕР ОБРАТНОГО ОТСЧЕТА
@@ -107,7 +66,7 @@ function updateCountdown() {
 
     const days = Math.floor(distance / (1000 * 60 * 60 * 24));
     const hours = Math.floor((distance / (1000 * 60 * 60)) % 24);
-    const minutes = Math.floor((distance / (1000 * 60)) % 60);
+    const minutes = Math.floor((distance / (1000 * 60 * 60)) % 60);
 
     const set = (id, value) => {
         const el = document.getElementById(id);
@@ -137,7 +96,7 @@ const form = document.getElementById('rsvp-form');
 if (form) {
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const btn = form.querySelector('button');
+        const btn = form.querySelector('.submit-btn');
         const oldText = btn.innerText;
         btn.innerText = "Надсилання...";
         btn.disabled = true;
