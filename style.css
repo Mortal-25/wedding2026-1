@@ -21,49 +21,62 @@ body {
 }
 
 /* =========================================
-   2. ГЛАВНЫЙ КОНТЕЙНЕР (ОГРАНИЧЕННАЯ ШИРИНА)
+   2. ГЛАВНЫЙ КОНТЕЙНЕР (ЦЕНТРИРОВАНИЕ)
 ========================================= */
 .book {
     width: 100% !important;
-    max-width: 480px !important; /* Идеальная ширина для мобильных и центрирования на ПК */
-    margin: 0 auto !important;   /* Центрирует всю страницу на больших экранах */
+    max-width: 480px !important;
+    margin: 0 auto !important;
     background: linear-gradient(180deg, #fdfaf6 0%, #f8f3ed 100%) !important;
     box-shadow: 0 0 40px rgba(77, 56, 45, 0.05);
     position: relative !important;
-    display: block !important;
     min-height: 100vh !important;
+    overflow: hidden !important; /* Прячем страницы, которые выходят за пределы */
 }
 
 /* =========================================
-   3. СЕКЦИИ САЙТА (ПЛАВНЫЙ ПОСЛЕДОВАТЕЛЬНЫЙ ПОТОК)
+   3. СЕКЦИИ САЙТА (ПОСТРАНИЧНОЕ НАЛОЖЕНИЕ)
 ========================================= */
 section, 
 .page {
-    /* Сбрасываем любые старые попытки скрыть блоки через display: none или абсолютное позиционирование */
-    display: flex !important; 
-    position: relative !important;
-    top: auto !important;
-    left: auto !important;
-    right: auto !important;
-    bottom: auto !important;
-    transform: none !important;
+    /* Абсолютное позиционирование, чтобы страницы легли друг на друга стопкой */
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
     width: 100% !important;
-    height: auto !important; /* Высота подстраивается под контент, ничего не вылезает */
-    min-height: auto !important;
+    height: 100% !important;
+    min-height: 100vh !important;
     
-    /* Внутренние отступы, чтобы контент не прижимался к краям экрана */
-    padding: 50px 24px !important; 
+    /* Внутренние отступы и центрирование контента */
+    padding: 60px 24px !important; 
+    display: flex !important; 
     flex-direction: column !important;
     align-items: center !important;
     text-align: center !important;
-    opacity: 1 !important;
-    visibility: visible !important;
+    
+    /* Скролл внутри конкретной страницы, если контент не влезает на маленьком экране */
+    overflow-y: auto !important; 
+
+    /* По умолчанию страницы скрыты и прозрачны */
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transition: opacity 0.4s ease, visibility 0.4s ease !important;
+    z-index: 1 !important;
 }
 
-/* Особые отступы для самого первого приветственного блока */
+/* Специфический класс для активной страницы, которую показывает JS */
+section.active,
+.page.active {
+    opacity: 1 !important;
+    visibility: visible !important;
+    z-index: 10 !important; /* Выводим активную страницу на передний план */
+    position: relative !important; /* Позволяет контейнеру .book адаптироваться под высоту */
+}
+
+/* Корректируем отступы первой страницы */
 section:first-of-type,
 .page:first-of-type {
-    padding-top: 70px !important;
+    padding-top: 80px !important;
     padding-bottom: 40px !important;
 }
 
@@ -141,41 +154,18 @@ h2 {
 }
 
 /* =========================================
-   5. КНОПКИ И ССЫЛКИ
+   5. КНОПКИ И ССЫЛКИ (КОРРЕКЦИЯ)
 ========================================= */
-.open-btn,
-.map-btn,
-form button {
-    margin-top: 15px !important;
-    margin-bottom: 10px !important;
-    padding: 15px 32px !important;
-    border: none !important;
-    border-radius: 999px !important;
-    background: linear-gradient(135deg, #4d382d, #70523d) !important;
-    color: white !important;
-    font-size: 11px !important;
-    letter-spacing: 3px !important;
-    text-transform: uppercase !important;
-    cursor: pointer !important;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1) !important;
-    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
-    text-decoration: none !important;
-    display: inline-block !important;
-}
-
-.open-btn:hover,
-.map-btn:hover,
-form button:hover {
-    transform: translateY(-2px) !important;
-    box-shadow: 0 12px 25px rgba(0,0,0,0.15) !important;
-}
-
-/* Полностью скрываем старые элементы постраничной навигации, чтобы они не ломали верстку */
+/* Если ты хочешь вернуть стрелочки и точки навигации, удали или закомментируй этот блок. 
+   Если перелистывание должно быть ТОЛЬКО по клику на экран, свайпу или кнопке "Відкрити запрошення", оставь как есть */
 .nav-buttons,
-.dots,
+.dots {
+    display: none !important;
+}
+/* Оставляем кастомные кнопки "назад/вперед" доступными, если они внутри разметки страниц */
 .back-btn,
 .next-btn {
-    display: none !important;
+    display: inline-block;
 }
 
 /* =========================================
