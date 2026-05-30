@@ -198,50 +198,54 @@ h2 {
 }
 
 /* =========================================
-   6. ТАЙМЕР ОБРАТНОГО ОТСЧЕТА (Вариант 1)
+   6. ТАЙМЕР ОБРАТНОГО ОТСЧЕТА
 ========================================= */
 .countdown {
-    display: flex;
-    justify-content: center;
-    gap: 14px;
-    margin-top: 15px;
-    width: 100%;
-    padding: 0 20px;
+    display: flex !important;
+    justify-content: center !important;
+    gap: 12px !important;
+    margin-top: 15px !important;
+    width: 100% !important;
+    max-width: 360px !important;
+    padding: 0 10px !important;
 }
 
 .count-box {
-    flex: 1;
-    max-width: 90px;
-    padding: 16px 10px;
-    background: rgba(255, 255, 255, 0.65); /* Полупрозрачный белый */
-    backdrop-filter: blur(8px);            /* Эффект матового стекла */
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(234, 223, 212, 0.5); /* Едва заметная рамка */
-    border-radius: 20px;                   /* Скругленные уголки */
-    box-shadow: 0 10px 25px rgba(77, 56, 45, 0.04); /* Мягкая тень */
-    transition: transform 0.3s ease;
-}
-
-.count-box:hover {
-    transform: translateY(-3px); /* Интерактивный эффект при наведении */
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 14px 8px !important;
+    
+    /* Оформление карточки (Белый полупрозрачный фон) */
+    background: rgba(255, 255, 255, 0.75) !important;
+    
+    /* Эффект матового стекла (Специфично для Safari/iPhone) */
+    -webkit-backdrop-filter: blur(10px) !important;
+    backdrop-filter: blur(10px) !important;
+    
+    border: 1px solid rgba(234, 223, 212, 0.6) !important;
+    border-radius: 18px !important;
+    box-shadow: 0 8px 20px rgba(77, 56, 45, 0.05) !important;
 }
 
 .count-box span {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 42px; /* Чуть увеличили цифры для баланса */
-    font-weight: 400;
-    color: #bc866f;  /* Твое благородное золото */
-    display: block;
-    line-height: 1;
+    font-family: 'Cormorant Garamond', serif !important;
+    font-size: 38px !important;
+    font-weight: 500 !important;
+    color: #bc866f !important; /* Цвет золота */
+    display: block !important;
+    line-height: 1 !important;
 }
 
 .count-box p {
-    font-size: 10px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-top: 6px;
-    color: #786457;
-    font-weight: 400;
+    font-family: 'Montserrat', sans-serif !important;
+    font-size: 10px !important;
+    letter-spacing: 1px !important;
+    text-transform: uppercase !important;
+    margin-top: 4px !important;
+    color: #786457 !important;
 }
 
 /* =========================================
