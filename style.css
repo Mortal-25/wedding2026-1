@@ -198,34 +198,50 @@ h2 {
 }
 
 /* =========================================
-   6. ТАЙМЕР ОБРАТНОГО ОТСЧЕТА
+   6. ТАЙМЕР ОБРАТНОГО ОТСЧЕТА (Вариант 1)
 ========================================= */
 .countdown {
     display: flex;
     justify-content: center;
-    gap: 16px;
+    gap: 14px;
     margin-top: 15px;
     width: 100%;
+    padding: 0 20px;
 }
 
 .count-box {
-    min-width: 70px;
+    flex: 1;
+    max-width: 90px;
+    padding: 16px 10px;
+    background: rgba(255, 255, 255, 0.65); /* Полупрозрачный белый */
+    backdrop-filter: blur(8px);            /* Эффект матового стекла */
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(234, 223, 212, 0.5); /* Едва заметная рамка */
+    border-radius: 20px;                   /* Скругленные уголки */
+    box-shadow: 0 10px 25px rgba(77, 56, 45, 0.04); /* Мягкая тень */
+    transition: transform 0.3s ease;
+}
+
+.count-box:hover {
+    transform: translateY(-3px); /* Интерактивный эффект при наведении */
 }
 
 .count-box span {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 38px;
-    color: #bc866f;
+    font-size: 42px; /* Чуть увеличили цифры для баланса */
+    font-weight: 400;
+    color: #bc866f;  /* Твое благородное золото */
     display: block;
     line-height: 1;
 }
 
 .count-box p {
     font-size: 10px;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
     text-transform: uppercase;
-    margin-top: 4px;
+    margin-top: 6px;
     color: #786457;
+    font-weight: 400;
 }
 
 /* =========================================
