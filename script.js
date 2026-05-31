@@ -60,21 +60,26 @@ function updateCountdown() {
     const dEl = document.getElementById('days');
     const hEl = document.getElementById('hours');
     const mEl = document.getElementById('minutes');
+    const sEl = document.getElementById('seconds'); // Добавили секунды для динамики
 
     if (distance <= 0) {
         if (dEl) dEl.textContent = "00";
         if (hEl) hEl.textContent = "00";
         if (mEl) mEl.textContent = "00";
+        if (sEl) sEl.textContent = "00";
         return;
     }
 
+    // Правильный расчет временных промежутков
     const days = Math.floor(distance / (1000 * 60 * 60 * 24));
     const hours = Math.floor((distance / (1000 * 60 * 60)) % 24);
-    const minutes = Math.floor((distance / (1000 * 60 * 60)) % 60);
+    const minutes = Math.floor((distance / (1000 * 60)) % 60); // Было: (distance / (1000 * 60 * 60)) % 60
+    const seconds = Math.floor((distance / 1000) % 60);       // Высчитываем остаток секунд
 
     if (dEl) dEl.textContent = days < 10 ? "0" + days : days;
     if (hEl) hEl.textContent = hours < 10 ? "0" + hours : hours;
     if (mEl) mEl.textContent = minutes < 10 ? "0" + minutes : minutes;
+    if (sEl) sEl.textContent = seconds < 10 ? "0" + seconds : seconds;
 }
 // Запускаем таймер сразу и ставим интервал
 updateCountdown();
