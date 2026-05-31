@@ -1,4 +1,4 @@
-const pages = document.querySelectorAll('.page');
+const pages = document.querySelectorAll('.page, section');
 let currentPage = 0;
 let isAnimating = false;
 
@@ -6,7 +6,7 @@ function render() {
     pages.forEach((page, index) => {
         if (index === currentPage) {
             page.classList.add('active');
-            page.scrollTop = 0; // Сбрасываем скролл наверх при открытии новой страницы
+            page.scrollTop = 0; 
         } else {
             page.classList.remove('active');
         }
@@ -29,7 +29,7 @@ function setPage(index) {
 function goNextPage() { setPage(currentPage + 1); }
 function goPrevPage() { setPage(currentPage - 1); }
 
-// КЛИКИ ПО КНОПКАМ НАВИГАЦИИ (Назначаем на все существующие стрелочки)
+// Навигация кнопками
 document.querySelectorAll('.next-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -44,23 +44,27 @@ document.querySelectorAll('.back-btn').forEach(btn => {
     });
 });
 
-// НАВИГАЦИЯ КЛАВИАТУРОЙ С ПК (Оставляем для удобства)
+// Навигация стрелочками клавиатуры на ПК
 document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowRight') goNextPage();
     if (e.key === 'ArrowLeft') goPrevPage();
 });
 
-// ТАЙМЕР ОБРАТНОГО ОТСЧЕТА
-const targetDate = new Date("August 1, 2026 14:00:00").getTime();
-
+// ТАЙМЕР ОБРАТНОГО ОТСЧЕТА (Раздельный разбор даты специально для iOS Safari)
 function updateCountdown() {
-    const now = Date.now();
-    const distance = targetDate - now;
+    // Явно задаем компоненты даты, чтобы ни один браузер не запутался в форматах
+    const target = new Date(2026, 7, 1, 14, 0, 0).getTime(); // 7 — это август (отсчет с 0)
+    const now = new Date().getTime();
+    const distance = target - now;
+
+    const dEl = document.getElementById('days');
+    const hEl = document.getElementById('hours');
+    const mEl = document.getElementById('minutes');
 
     if (distance <= 0) {
-        if(document.getElementById('days')) document.getElementById('days').innerText = "00";
-        if(document.getElementById('hours')) document.getElementById('hours').innerText = "00";
-        if(document.getElementById('minutes')) document.getElementById('minutes').innerText = "00";
+        if (dEl) dEl.textContent = "00";
+        if (hEl) hEl.textContent = "00";
+        if (mEl) mEl.textContent = "00";
         return;
     }
 
@@ -68,17 +72,13 @@ function updateCountdown() {
     const hours = Math.floor((distance / (1000 * 60 * 60)) % 24);
     const minutes = Math.floor((distance / (1000 * 60 * 60)) % 60);
 
-    const set = (id, value) => {
-        const el = document.getElementById(id);
-        if (el) el.innerText = value < 10 ? "0" + value : value;
-    };
-
-    set('days', days);
-    set('hours', hours);
-    set('minutes', minutes);
+    if (dEl) dEl.textContent = days < 10 ? "0" + days : days;
+    if (hEl) hEl.textContent = hours < 10 ? "0" + hours : hours;
+    if (mEl) mEl.textContent = minutes < 10 ? "0" + minutes : minutes;
 }
-setInterval(updateCountdown, 1000);
+// Запускаем таймер сразу и ставим интервал
 updateCountdown();
+setInterval(updateCountdown, 1000);
 
 // ИМЯ ИЗ ССЫЛКИ
 const params = new URLSearchParams(window.location.search);
@@ -96,7 +96,7 @@ const form = document.getElementById('rsvp-form');
 if (form) {
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const btn = form.querySelector('.submit-btn');
+        const btn = form.querySelector('.submit-btn') || form.querySelector('button[type="submit"]');
         const oldText = btn.innerText;
         btn.innerText = "Надсилання...";
         btn.disabled = true;
@@ -120,5 +120,5 @@ if (form) {
     });
 }
 
-// Запуск стартового состояния
+// Запуск стартового состояния страницы
 render();
