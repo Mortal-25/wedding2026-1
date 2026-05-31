@@ -387,3 +387,57 @@ input:focus, select:focus {
 .floral-bottom { bottom: 15px; right: 15px; width: 100px; height: 100px; transform: rotate(180deg); background-image: url('https://png.pngtree.com/png-vector/20231017/ourmid/pngtree-watercolor-eucalyptus-leaf-border-frame-png-image_10225058.png'); }
 .leaf-1 { top: 15px; left: 15px; width: 70px; height: 70px; background-image: url('https://png.pngtree.com/png-vector/20231017/ourmid/pngtree-watercolor-eucalyptus-leaf-border-frame-png-image_10225058.png'); }
 .leaf-2 { bottom: 15px; right: 15px; width: 70px; height: 70px; transform: rotate(180deg); background-image: url('https://png.pngtree.com/png-vector/20231017/ourmid/pngtree-watercolor-eucalyptus-leaf-border-frame-png-image_10225058.png'); }
+
+/* =========================================
+   ФИКС ТАЙМЕРА ДЛЯ IPHONE (В САМЫЙ КОНЕЦ ФАЙЛА)
+========================================= */
+.wedding-timer-container {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    gap: 12px !important;
+    width: 100% !important;
+    max-width: 340px !important;
+    margin: 0 auto !important;
+    box-sizing: border-box !important;
+}
+
+.timer-card {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 16px 5px !important;
+    background-color: rgba(255, 255, 255, 0.75) !important;
+    
+    /* Размытие заднего плана для Safari */
+    -webkit-backdrop-filter: blur(10px) !important;
+    backdrop-filter: blur(10px) !important;
+    
+    border: 1px solid rgba(234, 223, 212, 0.7) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 20px rgba(77, 56, 45, 0.04) !important;
+    box-sizing: border-box !important;
+}
+
+.timer-card span {
+    font-family: 'Cormorant Garamond', serif !important;
+    font-size: 38px !important;
+    font-weight: 500 !important;
+    color: #bc866f !important;
+    line-height: 1 !important;
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.timer-card p {
+    font-family: 'Montserrat', sans-serif !important;
+    font-size: 10px !important;
+    letter-spacing: 1px !important;
+    text-transform: uppercase !important;
+    margin-top: 5px !important;
+    color: #786457 !important;
+    line-height: 1 !important;
+}
