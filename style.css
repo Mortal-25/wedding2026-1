@@ -590,3 +590,64 @@ input:focus, select:focus {
     box-shadow: 0 4px 12px rgba(0,0,0,0.02);
     text-align: center;
 }
+/* --- Стилизация текстовых блоков на странице с фото --- */
+
+.photo-text-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 90%;
+    margin: 0 auto;
+}
+
+/* Базовый элегантный шрифт с засечками */
+.text-serif {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    color: #4d382d;
+    margin: 2px 0;
+    font-weight: 500;
+}
+
+/* Рукописный шрифт для второй строчки */
+.text-script {
+    font-family: 'Caveat', cursive;
+    font-size: 26px; /* Рукописные шрифты визуально меньше, поэтому увеличиваем */
+    color: #8c7355;  /* Чуть более мягкий оттенок, как на макете */
+    margin: 4px 0 0 0;
+}
+
+/* Контурное сердечко в конце рукописной строки */
+.heart-icon {
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+    margin-left: 5px;
+    vertical-align: middle;
+}
+
+/* Разделитель-сердечко между блоками текста */
+.text-divider-heart {
+    font-size: 10px;
+    color: #c9a36c;
+    margin: 15px 0;
+}
+
+/* Блок с годами (2008 → 2026) */
+.timeline-years {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    color: #bfa38a; /* Нежный пастельный цвет из примера */
+    letter-spacing: 2px;
+    margin-top: 25px; /* Отступ сверху, чтобы отделить от основного текста */
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;       /* Расстояние между цифрами и стрелкой */
+}
+
+.timeline-years .arrow {
+    font-size: 16px;
+    position: relative;
+    top: -1px;       /* Легкое выравнивание стрелочки по центру цифр */
+}
