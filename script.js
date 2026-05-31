@@ -86,15 +86,35 @@ updateCountdown();
 setInterval(updateCountdown, 1000);
 
 // ИМЯ ИЗ ССЫЛКИ
-const params = new URLSearchParams(window.location.search);
-const guestName = params.get('name');
-if (guestName) {
-    const formatted = guestName.replace(/\+/g, ' ');
-    const title = document.querySelector('.guest-name');
-    if (title) title.innerText = formatted;
-    const input = document.querySelector('input[name="name"]');
-    if (input) input.value = formatted;
-}
+document.addEventListener("DOMContentLoaded", function() {
+    // Получаем параметры из адресной строки URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const guestName = urlParams.get('name');
+    const gender = urlParams.get('g'); // 'm' - он, 'f' - она, 'p' - они/семья
+
+    const greetingEl = document.getElementById('greeting-type');
+    const nameEl = document.getElementById('guest-target-name');
+
+    if (guestName) {
+        // Очищаем имя от лишних плюсов и пробелов
+        const decodedName = decodeURIComponent(guestName.replace(/\+/g, ' '));
+        nameEl.textContent = decodedName;
+
+        // Логика автоматической смены обращения в зависимости от параметра &g=
+        if (greetingEl) {
+            if (gender === 'm') {
+                greetingEl.textContent = 'Шановний';
+            } else if (gender === 'f') {
+                greetingEl.textContent = 'Шановна';
+            } else if (gender === 'p') {
+                greetingEl.textContent = 'Шановні';
+            } else {
+                // Если параметр &g забыли указать, оставляем нейтральное/универсальное
+                greetingEl.textContent = 'Шановні'; 
+            }
+        }
+    }
+});
 
 // ОТПРАВКА RSVP
 const form = document.getElementById('rsvp-form');
