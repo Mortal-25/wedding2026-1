@@ -50,17 +50,21 @@ document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowLeft') goPrevPage();
 });
 
-// ТАЙМЕР ОБРАТНОГО ОТСЧЕТА (Используем ISO-формат даты YYYY-MM-DD для корректной работы на iOS)
-const targetDate = new Date("2026-08-01T14:00:00").getTime();
-
+// ТАЙМЕР ОБРАТНОГО ОТСЧЕТА (Раздельный разбор даты специально для iOS Safari)
 function updateCountdown() {
-    const now = Date.now();
-    const distance = targetDate - now;
+    // Явно задаем компоненты даты, чтобы ни один браузер не запутался в форматах
+    const target = new Date(2026, 7, 1, 14, 0, 0).getTime(); // 7 — это август (отсчет с 0)
+    const now = new Date().getTime();
+    const distance = target - now;
+
+    const dEl = document.getElementById('days');
+    const hEl = document.getElementById('hours');
+    const mEl = document.getElementById('minutes');
 
     if (distance <= 0) {
-        if(document.getElementById('days')) document.getElementById('days').innerText = "00";
-        if(document.getElementById('hours')) document.getElementById('hours').innerText = "00";
-        if(document.getElementById('minutes')) document.getElementById('minutes').innerText = "00";
+        if (dEl) dEl.textContent = "00";
+        if (hEl) hEl.textContent = "00";
+        if (mEl) mEl.textContent = "00";
         return;
     }
 
@@ -68,17 +72,13 @@ function updateCountdown() {
     const hours = Math.floor((distance / (1000 * 60 * 60)) % 24);
     const minutes = Math.floor((distance / (1000 * 60 * 60)) % 60);
 
-    const set = (id, value) => {
-        const el = document.getElementById(id);
-        if (el) el.innerText = value < 10 ? "0" + value : value;
-    };
-
-    set('days', days);
-    set('hours', hours);
-    set('minutes', minutes);
+    if (dEl) dEl.textContent = days < 10 ? "0" + days : days;
+    if (hEl) hEl.textContent = hours < 10 ? "0" + hours : hours;
+    if (mEl) mEl.textContent = minutes < 10 ? "0" + minutes : minutes;
 }
-setInterval(updateCountdown, 1000);
+// Запускаем таймер сразу и ставим интервал
 updateCountdown();
+setInterval(updateCountdown, 1000);
 
 // ИМЯ ИЗ ССЫЛКИ
 const params = new URLSearchParams(window.location.search);
@@ -120,5 +120,5 @@ if (form) {
     });
 }
 
-// Запуск стартового состояния
+// Запуск стартового состояния страницы
 render();
